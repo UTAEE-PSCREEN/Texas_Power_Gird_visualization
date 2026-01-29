@@ -2,6 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
+        <base href="/Texas_Power_Gird_visualization/">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
         <meta name="mobile-web-app-capable" content="yes">
@@ -20,7 +21,7 @@
             margin: 0;
         }
         </style>
-        <title></title>
+        <title>Texas Power Grid Visualization</title>
     </head>
     <body>
         <div id="map">
@@ -40,7 +41,18 @@
         <script src="js/leaflet-search.js"></script>
         <script src="data/P82U_Combined_Main_Nodes_0.js"></script>
         <script src="data/P82U_Combined_Cross_District_Nodes_1.js"></script>
-        <script src="data/P82U_Combined_PowerFlow_2.js"></script>
+        <script>
+        // 动态加载 PowerFlow 数据文件
+        var powerFlowScript = document.createElement('script');
+        powerFlowScript.src = 'https://github.com/UTAEE-PSSCREEN/Texas_Power_Gird_visualization/releases/download/v1.0.0/P82U_Combined_PowerFlow_2.js';
+        powerFlowScript.onload = function() {
+            console.log('PowerFlow data loaded successfully');
+        };
+        powerFlowScript.onerror = function() {
+            console.error('Failed to load PowerFlow data');
+        };
+        document.head.appendChild(powerFlowScript);
+        </script>
         <script>
         var map = L.map('map', {
             zoomControl:false, maxZoom:28, minZoom:1
@@ -529,6 +541,17 @@
         bounds_group.addLayer(layer_P82U_Combined_PowerFlow_2);
         map.addLayer(layer_P82U_Combined_PowerFlow_2);
         setBounds();
+        
+        // Create layer control panel
+        var layersControl = L.control.layers(null, {
+            'Main Nodes': layer_P82U_Combined_Main_Nodes_0,
+            'Cross District Nodes': layer_P82U_Combined_Cross_District_Nodes_1,
+            'Power Flow': layer_P82U_Combined_PowerFlow_2
+        }, {
+            position: 'topright',
+            collapsed: false
+        }).addTo(map);
+        
         map.addControl(new L.Control.Search({
             layer: layer_P82U_Combined_Main_Nodes_0,
             initial: false,
