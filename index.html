@@ -40,7 +40,43 @@
         <script src="js/leaflet-search.js"></script>
         <script src="data/P82U_Combined_Main_Nodes_0.js"></script>
         <script src="data/P82U_Combined_Cross_District_Nodes_1.js"></script>
-        <script src="data/P82U_Combined_PowerFlow_2.js"></script>
+        <!-- 加载分割的PowerFlow数据文件 -->
+        <script src="data/P82U_Combined_PowerFlow_part1.js"></script>
+        <script src="data/P82U_Combined_PowerFlow_part2.js"></script>
+        <script src="data/P82U_Combined_PowerFlow_part3.js"></script>
+        <script src="data/P82U_Combined_PowerFlow_part4.js"></script>
+        <!-- 合并分割的数据 -->
+        <script>
+        // 等待所有分割的PowerFlow数据加载完成后再合并
+        function mergePowerFlowData() {
+            // 检查所有数据是否都加载完成
+            if (typeof json_P82U_Combined_PowerFlow_part1 === 'undefined' ||
+                typeof json_P82U_Combined_PowerFlow_part2 === 'undefined' ||
+                typeof json_P82U_Combined_PowerFlow_part3 === 'undefined' ||
+                typeof json_P82U_Combined_PowerFlow_part4 === 'undefined') {
+                // 如果还没加载完，等待100ms后重试
+                setTimeout(mergePowerFlowData, 100);
+                return;
+            }
+            
+            // 合并所有部分的数据
+            window.json_P82U_Combined_PowerFlow_2 = {
+                type: "FeatureCollection",
+                features: [
+                    ...json_P82U_Combined_PowerFlow_part1.features,
+                    ...json_P82U_Combined_PowerFlow_part2.features,
+                    ...json_P82U_Combined_PowerFlow_part3.features,
+                    ...json_P82U_Combined_PowerFlow_part4.features
+                ]
+            };
+            
+            console.log('✅ PowerFlow data merged successfully!');
+            console.log('📊 Total features:', window.json_P82U_Combined_PowerFlow_2.features.length);
+        }
+        
+        // 调用合并函数
+        mergePowerFlowData();
+        </script>
         <script>
         var map = L.map('map', {
             zoomControl:false, maxZoom:28, minZoom:1
