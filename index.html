@@ -2,6 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
+        <base href="/Texas_Power_Gird_visualization/">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
         <meta name="mobile-web-app-capable" content="yes">
@@ -20,7 +21,7 @@
             margin: 0;
         }
         </style>
-        <title></title>
+        <title>Texas Power Grid Visualization</title>
     </head>
     <body>
         <div id="map">
@@ -40,13 +41,24 @@
         <script src="js/leaflet-search.js"></script>
         <script src="data/P82U_Combined_Main_Nodes_0.js"></script>
         <script src="data/P82U_Combined_Cross_District_Nodes_1.js"></script>
-        <script src="data/P82U_Combined_PowerFlow_2.js"></script>
+        <script>
+        // Dynamically load PowerFlow data file from GitHub Release
+        var powerFlowScript = document.createElement('script');
+        powerFlowScript.src = 'https://github.com/UTAEE-PSSCREEN/Texas_Power_Gird_visualization/releases/download/v1.0.0/P82U_Combined_PowerFlow_2.js';
+        powerFlowScript.onload = function() {
+            console.log('PowerFlow data loaded successfully');
+        };
+        powerFlowScript.onerror = function() {
+            console.error('Failed to load PowerFlow data');
+        };
+        document.head.appendChild(powerFlowScript);
+        </script>
         <script>
         var map = L.map('map', {
             zoomControl:false, maxZoom:28, minZoom:1
         }).fitBounds([[29.968109443168288,-98.46163700207478],[30.691980330545555,-97.09461050401943]]);
         
-        // 添加OpenStreetMap底图
+        // Add OpenStreetMap base layer
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors',
             maxZoom: 19
@@ -55,7 +67,7 @@
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
-        // remove popup's row if "visible-with-data"
+        // Remove popup row if "visible-with-data"
         function removeEmptyRowsFromPopupContent(content, feature) {
          var tempDiv = document.createElement('div');
          tempDiv.innerHTML = content;
@@ -101,7 +113,7 @@
                     video.style.maxWidth = "60vw";
                     imgTd.parentNode.replaceChild(video, imgTd);
                     popup._contentNode.classList.add('media');
-                    // Aggiorna il popup quando il video carica i metadati
+                    // Update popup when video loads metadata
                     video.addEventListener('loadedmetadata', function() {
                         popup.update();
                     });
@@ -530,7 +542,7 @@
         map.addLayer(layer_P82U_Combined_PowerFlow_2);
         setBounds();
         
-        // Create layer control panel - English labels
+        // Create layer control panel
         var layersControl = L.control.layers(null, {
             'Main Nodes': layer_P82U_Combined_Main_Nodes_0,
             'Cross District Nodes': layer_P82U_Combined_Cross_District_Nodes_1,
