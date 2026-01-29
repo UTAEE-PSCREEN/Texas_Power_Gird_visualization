@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-		<base href="/Texas_Power_Gird_visualization/">
+        <base href="/Texas_Power_Gird_visualization/">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
         <meta name="mobile-web-app-capable" content="yes">
@@ -21,7 +21,7 @@
             margin: 0;
         }
         </style>
-        <title></title>
+        <title>Texas Power Grid Visualization</title>
     </head>
     <body>
         <div id="map">
@@ -42,6 +42,7 @@
         <script src="data/P82U_Combined_Main_Nodes_0.js"></script>
         <script src="data/P82U_Combined_Cross_District_Nodes_1.js"></script>
         <script src="https://cdn.jsdelivr.net/gh/UTAEE-PSSCREEN/Texas_Power_Gird_visualization@v1.0.0/P82U_Combined_PowerFlow_2.js"></script>
+        <script>
         var map = L.map('map', {
             zoomControl:false, maxZoom:28, minZoom:1
         }).fitBounds([[29.968109443168288,-98.46163700207478],[30.691980330545555,-97.09461050401943]]);
@@ -529,6 +530,17 @@
         bounds_group.addLayer(layer_P82U_Combined_PowerFlow_2);
         map.addLayer(layer_P82U_Combined_PowerFlow_2);
         setBounds();
+        
+        // Create layer control panel
+        var layersControl = L.control.layers(null, {
+            'Main Nodes': layer_P82U_Combined_Main_Nodes_0,
+            'Cross District Nodes': layer_P82U_Combined_Cross_District_Nodes_1,
+            'Power Flow': layer_P82U_Combined_PowerFlow_2
+        }, {
+            position: 'topright',
+            collapsed: false
+        }).addTo(map);
+        
         map.addControl(new L.Control.Search({
             layer: layer_P82U_Combined_Main_Nodes_0,
             initial: false,
@@ -542,3 +554,4 @@
         </script>        
     </body>
 </html>
+
